@@ -1,19 +1,18 @@
 import java.util.Observable;
-import java.util.Observer;
 
 public class Heating extends Observable implements Runnable {
 	private double temperature;
 	private boolean on = false;
 
-	public Heating(double temperature) {
+	private Heating(double temperature) {
 		this.temperature = temperature;
 	}
 
-	public void turnOn() {
+	void turnOn() {
 		on = true;
 	}
 
-	public void turnOff() {
+	void turnOff() {
 		on = false;
 	}
 
@@ -39,11 +38,15 @@ public class Heating extends Observable implements Runnable {
 
 
 	public static void main(String[] args) {
+
 		// Heizung, Starttemperatur 25 Grad
 		Heating heating = new Heating(25);
 
-		// Beispiel: Observer hinzufügen
-		// heating.addObserver( ... );
+		// Observer für niedrige Temperatur hinzufügen.
+		heating.addObserver(new LowTemperatureObserver(21));
+
+		// Observer für hohe Temperatur hinzufügen.
+		heating.addObserver(new HighTemperatureObserver(25));
 
 		// Temperaturmessung läuft
 		new Thread(heating).run();
